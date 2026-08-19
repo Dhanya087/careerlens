@@ -14,11 +14,14 @@ type RouteContext = {
 };
 
 export async function DELETE(
-  request: Request,
+  _request: Request,
   { params }: RouteContext
 ) {
   try {
-    // Get analysis ID
+    // ==========================================
+    // 1. GET ANALYSIS ID
+    // ==========================================
+
     const { id } = await params;
 
     if (!id) {
@@ -32,7 +35,10 @@ export async function DELETE(
       );
     }
 
-    // Check authentication
+    // ==========================================
+    // 2. AUTHENTICATION
+    // ==========================================
+
     const cookieStore = await cookies();
 
     const token =
@@ -49,7 +55,10 @@ export async function DELETE(
       );
     }
 
-    // Verify JWT
+    // ==========================================
+    // 3. VERIFY JWT
+    // ==========================================
+
     const { payload } =
       await jwtVerify(token, secret);
 
@@ -67,7 +76,10 @@ export async function DELETE(
       );
     }
 
-    // Find analysis belonging to current user
+    // ==========================================
+    // 4. CHECK ANALYSIS BELONGS TO USER
+    // ==========================================
+
     const analysis =
       await prisma.analysis.findFirst({
         where: {
@@ -90,12 +102,19 @@ export async function DELETE(
       );
     }
 
-    // Delete analysis
+    // ==========================================
+    // 5. DELETE ANALYSIS
+    // ==========================================
+
     await prisma.analysis.delete({
       where: {
         id: analysis.id,
       },
     });
+
+    // ==========================================
+    // 6. SUCCESS
+    // ==========================================
 
     return NextResponse.json({
       success: true,

@@ -11,10 +11,11 @@ import AnalysisHistory from "./AnalysisHistory";
 import LogoutButton from "./LogoutButton";
 import DashboardNav from "./DashboardNav";
 
+export const dynamic = "force-dynamic";
+
 const secret = new TextEncoder().encode(
   process.env.AUTH_SECRET
 );
-
 export default async function DashboardPage() {
   try {
     // ==========================================
